@@ -10,8 +10,6 @@ import {
 import { ProfileEntity } from './profile.entity';
 import { PostEntity } from './post.entity';
 
-type TUserRole = 'role' | 'user';
-
 @Entity({ name: 'user' })
 export class UserEntity {
   @PrimaryGeneratedColumn()
@@ -23,8 +21,8 @@ export class UserEntity {
   @Column({ unique: true })
   email: string;
 
-  @Column({ type: 'enum', default: 'user' })
-  role: TUserRole;
+  @Column()
+  role: string;
 
   @OneToOne(() => ProfileEntity, (profileEntity) => profileEntity.user)
   profile: ProfileEntity;
