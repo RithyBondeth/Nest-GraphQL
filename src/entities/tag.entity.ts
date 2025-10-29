@@ -1,27 +1,28 @@
 import {
   Column,
-  CreateDateColumn,
   Entity,
-  OneToMany,
+  ManyToMany,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
 } from 'typeorm';
 import { PostEntity } from './post.entity';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
 
+@ObjectType()
 @Entity({ name: 'tag' })
 export class TagEntity {
+  constructor(partial?: Partial<TagEntity>) {
+    Object.assign(this, partial);
+  }
+
+  @Field(() => Int)
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Field()
   @Column()
   name: string;
 
-  @OneToMany(() => PostEntity, (postEntity) => postEntity.tags)
+  @Field(() => [PostEntity])
+  @ManyToMany(() => PostEntity, (postEntity) => postEntity.tags)
   posts: PostEntity[];
-
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @UpdateDateColumn()
-  updatedAt: Date;
 }
