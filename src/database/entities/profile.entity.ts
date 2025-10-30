@@ -10,7 +10,7 @@ import { Field, Int, ObjectType } from '@nestjs/graphql';
 @ObjectType()
 @Entity({ name: 'profile' })
 export class ProfileEntity {
-  constructor(partial: Partial<ProfileEntity>) {
+  constructor(partial?: Partial<ProfileEntity>) {
     Object.assign(this, partial);
   }
 
