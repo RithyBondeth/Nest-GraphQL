@@ -32,11 +32,11 @@ export class UserEntity {
   @Field(() => ProfileEntity)
   @OneToOne(() => ProfileEntity, (profileEntity) => profileEntity.user)
   @JoinColumn()
-  profile: ProfileEntity;
+  profile: Promise<ProfileEntity>;
 
   @Field(() => [PostEntity])
   @OneToMany(() => PostEntity, (postEntity) => postEntity.user, {
     cascade: true,
   })
-  posts: PostEntity[];
+  posts: Promise<PostEntity[]>;
 }

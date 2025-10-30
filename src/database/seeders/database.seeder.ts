@@ -65,7 +65,7 @@ export class DatabaseSeeder {
       const savedProfile = await this.profileRepository.save(profile);
 
       const userData = UserFactory.create({
-        profile: savedProfile,
+        profile: Promise.resolve(savedProfile),
       });
       const user = this.userRepository.create(userData);
       users.push(await this.userRepository.save(user));
@@ -88,8 +88,8 @@ export class DatabaseSeeder {
       );
 
       const postData = PostFactory.create({
-        user: randomUser,
-        tags: randomTags,
+        user: Promise.resolve(randomUser),
+        tags: Promise.resolve(randomTags),
       });
 
       const post = this.postRepository.create(postData);

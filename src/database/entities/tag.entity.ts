@@ -1,9 +1,4 @@
-import {
-  Column,
-  Entity,
-  ManyToMany,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { PostEntity } from './post.entity';
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 
@@ -24,5 +19,5 @@ export class TagEntity {
 
   @Field(() => [PostEntity])
   @ManyToMany(() => PostEntity, (postEntity) => postEntity.tags)
-  posts: PostEntity[];
+  posts: Promise<PostEntity[]>;
 }

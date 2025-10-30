@@ -1,9 +1,4 @@
-import {
-  Column,
-  Entity,
-  OneToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { UserEntity } from './user.entity';
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 
@@ -28,5 +23,5 @@ export class ProfileEntity {
 
   @Field(() => UserEntity)
   @OneToOne(() => UserEntity, (userEntity) => userEntity.profile)
-  user: UserEntity;
+  user: Promise<UserEntity>;
 }

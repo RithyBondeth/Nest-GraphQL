@@ -31,10 +31,10 @@ export class PostEntity {
 
   @Field(() => UserEntity)
   @ManyToOne(() => UserEntity, (userEntity) => userEntity.posts)
-  user: UserEntity;
+  user: Promise<UserEntity>;
 
   @Field(() => [TagEntity])
   @ManyToMany(() => TagEntity, (tagEntity) => tagEntity.posts)
   @JoinTable()
-  tags: TagEntity[];
+  tags: Promise<TagEntity[]>;
 }
