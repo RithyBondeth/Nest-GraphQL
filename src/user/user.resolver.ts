@@ -1,6 +1,7 @@
 import {
   Args,
   Int,
+  Mutation,
   Parent,
   Query,
   ResolveField,
@@ -9,6 +10,7 @@ import {
 import { UserEntity } from 'src/database/entities/user.entity';
 import { UserService } from './user.service';
 import { Logger } from '@nestjs/common';
+import { CreateUserInput } from './dto/create-user.dto';
 
 @Resolver(() => UserEntity)
 export class UserResolver {
@@ -31,5 +33,10 @@ export class UserResolver {
   async profile(@Parent() user: UserEntity) {
     this.logger.debug(`Fetching profile for user ${user.id}`);
     return await user.profile;
+  }
+
+  @Mutation(() => UserEntity)
+  createUser(@Args('createUserInput') createUserInput: CreateUserInput) {
+    return this.userService.createUser(createUserInput);
   }
 }
