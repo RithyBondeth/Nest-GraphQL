@@ -1,40 +1,47 @@
 import {
   Column,
-  CreateDateColumn,
   Entity,
+  JoinColumn,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
 } from 'typeorm';
 import { ProfileEntity } from './profile.entity';
 import { PostEntity } from './post.entity';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { ERole } from '../enums/role.enum';
 
+@ObjectType()
 @Entity({ name: 'user' })
 export class UserEntity {
-  @PrimaryGeneratedColumn()
-  id: string;
+  constructor(partial?: Partial<UserEntity>) {
+    Object.assign(this, partial);
+  }
 
+  @Field(() => Int)
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Field()
   @Column()
   username: string;
 
+  @Field()
   @Column({ unique: true })
   email: string;
 
-  @Column()
-  role: string;
+  @Field(() => ERole)
+  @Column({ type: 'enum', enum: ERole, default: ERole.USER })
+  role: ERole;
 
+  @Field(() => ProfileEntity)
   @OneToOne(() => ProfileEntity, (profileEntity) => profileEntity.user)
-  profile: ProfileEntity;
+  @JoinColumn()
+  profile: Promise<ProfileEntity>;
 
+  @Field(() => [PostEntity])
   @OneToMany(() => PostEntity, (postEntity) => postEntity.user, {
     cascade: true,
   })
-  posts: PostEntity[];
-
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @UpdateDateColumn()
-  updatedAt: Date;
+  posts: Promise<PostEntity[]>;
 }

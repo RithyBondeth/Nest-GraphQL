@@ -1,13 +1,13 @@
 import { ConfigService } from '@nestjs/config';
-import { PostEntity } from 'src/entities/post.entity';
-import { ProfileEntity } from 'src/entities/profile.entity';
-import { TagEntity } from 'src/entities/tag.entity';
-import { UserEntity } from 'src/entities/user.entity';
+import { PostEntity } from '../entities/post.entity';
+import { ProfileEntity } from '../entities/profile.entity';
+import { TagEntity } from '../entities/tag.entity';
+import { UserEntity } from '../entities/user.entity';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 
-export const databaseConfig = async (
+export const databaseConfig = (
   configService: ConfigService,
-): Promise<PostgresConnectionOptions> => ({
+): PostgresConnectionOptions => ({
   type: 'postgres',
   host: configService.get<string>('DATABASE_HOST'),
   port: configService.get<number>('DATABASE_PORT'),
