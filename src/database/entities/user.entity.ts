@@ -9,6 +9,7 @@ import {
 import { ProfileEntity } from './profile.entity';
 import { PostEntity } from './post.entity';
 import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { ERole } from '../enums/role.enum';
 
 @ObjectType()
 @Entity({ name: 'user' })
@@ -28,6 +29,10 @@ export class UserEntity {
   @Field()
   @Column({ unique: true })
   email: string;
+
+  @Field(() => ERole)
+  @Column({ type: 'enum', enum: ERole, default: ERole.USER })
+  role: ERole;
 
   @Field(() => ProfileEntity)
   @OneToOne(() => ProfileEntity, (profileEntity) => profileEntity.user)
