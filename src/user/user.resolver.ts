@@ -3,8 +3,8 @@ import { UserEntity } from 'src/entities/user.entity';
 
 @Resolver(() => UserEntity)
 export class UserResolver {
-    @Query(() => UserEntity, { name: 'users' }) 
-    async findAll() {
-        return [] as UserEntity[];
-    }
+  @Query(() => [UserEntity], { name: 'users' })
+  async findAll() {
+    return [] as UserEntity[];
+  }
 }
