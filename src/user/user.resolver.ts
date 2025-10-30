@@ -11,6 +11,7 @@ import { UserEntity } from 'src/database/entities/user.entity';
 import { UserService } from './user.service';
 import { Logger } from '@nestjs/common';
 import { CreateUserInput } from './dto/create-user.dto';
+import { UpdateUserInput } from './dto/update-user.dto';
 
 @Resolver(() => UserEntity)
 export class UserResolver {
@@ -36,7 +37,23 @@ export class UserResolver {
   }
 
   @Mutation(() => UserEntity)
-  createUser(@Args('createUserInput') createUserInput: CreateUserInput) {
+  createUser(
+    @Args('createUserInput') createUserInput: CreateUserInput,
+  ): Promise<UserEntity> {
     return this.userService.createUser(createUserInput);
+  }
+
+  @Mutation(() => UserEntity)
+  updateUser(
+    @Args('id', { type: () => Int }) id: number,
+    @Args('updateUserInput')
+    updateUserInput: UpdateUserInput,
+  ): Promise<UserEntity> {
+    return this.userService.updateUser(id, updateUserInput);
+  }
+
+  @Mutation(() => Boolean)
+  removeUser(@Args('id', { type: () => Int }) id: number) {
+    return this.userService.removeUser(id);
   }
 }
