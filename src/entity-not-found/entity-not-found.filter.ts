@@ -6,6 +6,6 @@ import { EntityNotFoundError } from 'typeorm';
 export class EntityNotFoundFilter<T> implements GqlExceptionFilter {
   catch(exception: EntityNotFoundError, host: ArgumentsHost) {
     GqlArgumentsHost.create(host);
-    return new NotFoundException("Entity not found");
+    return new NotFoundException('Entity not found');
   }
 }

@@ -9,9 +9,9 @@ async function bootstrap() {
 
   try {
     await seeder.seed();
-    console.log('✅ Seeding completed successfully');
+    console.log('Seeding database completed successfully');
   } catch (error) {
-    console.error('❌ Seeding failed:', error);
+    console.error('Seeding database failed:', error);
     throw error;
   } finally {
     await app.close();

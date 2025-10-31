@@ -2,14 +2,14 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { faker } from '@faker-js/faker';
-import { UserEntity } from '../entities/user.entity';
-import { PostEntity } from '../entities/post.entity';
-import { TagEntity } from '../entities/tag.entity';
-import { ProfileEntity } from '../entities/profile.entity';
 import { UserFactory } from '../factories/user.factory';
 import { PostFactory } from '../factories/post.factory';
 import { TagFactory } from '../factories/tag.factory';
 import { ProfileFactory } from '../factories/profile.factory';
+import { UserEntity } from '../entities/user.entity';
+import { PostEntity } from '../entities/post.entity';
+import { TagEntity } from '../entities/tag.entity';
+import { ProfileEntity } from '../entities/profile.entity';
 
 @Injectable()
 export class DatabaseSeeder {
