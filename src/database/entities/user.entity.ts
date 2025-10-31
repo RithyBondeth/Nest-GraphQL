@@ -34,6 +34,9 @@ export class UserEntity {
   @Column({ type: 'enum', enum: ERole, default: ERole.USER })
   role: ERole;
 
+  @Column({ nullable: true })
+  password: string;
+
   @Field(() => ProfileEntity)
   @OneToOne(() => ProfileEntity, (profileEntity) => profileEntity.user)
   @JoinColumn()
