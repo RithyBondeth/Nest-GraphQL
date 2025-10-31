@@ -12,12 +12,15 @@ import { Logger } from 'nestjs-pino';
 import { SignInInputDto } from './dtos/signin.dto';
 import { ERole } from '@app/common/utils/enums/role.enum';
 import { ResponseMessage } from '@app/common/utils/constants/response-message.constant';
+import { JwtService } from '@app/common/jwt/jwt.service';
+import { ac } from '@faker-js/faker/dist/airline-DF6RqYmq';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
+    private readonly jwtService: JwtService,
     private readonly logger: Logger,
   ) {}
 
@@ -39,7 +42,7 @@ export class AuthService {
     }
   }
 
-  async signIn(signInInput: SignInInputDto): Promise<UserEntity> {
+  async validateUser(signInInput: SignInInputDto): Promise<UserEntity> {
     const user = await this.userRepository.findOneByOrFail({
       email: signInInput.email,
     });
@@ -49,5 +52,17 @@ export class AuthService {
       throw new UnauthorizedException(ResponseMessage.INVALID_CREDENTIAL);
 
     return user;
+  }
+
+  async signIn(
+    user: UserEntity,
+  ): Promise<{ userId: number; role: ERole; accessToken: string }> {
+    const accessToken = await this.jwtService.generateToken(user.id);
+
+    return {
+      userId: user.id,
+      role: user.role,
+      accessToken: accessToken,
+    };
   }
 }
