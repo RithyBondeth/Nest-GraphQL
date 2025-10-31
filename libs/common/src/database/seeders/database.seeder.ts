@@ -101,7 +101,7 @@ export class DatabaseSeeder {
 
   async clear() {
     this.logger.log('Clearing existing data...');
-    
+
     try {
       // Use clear() method which doesn't require criteria
       await this.postRepository.clear();
