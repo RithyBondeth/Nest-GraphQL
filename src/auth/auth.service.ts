@@ -1,11 +1,17 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { SignUpInputDto } from './dtos/signup.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from '@app/common/database/entities/user.entity';
 import { Repository } from 'typeorm';
-import { hash } from 'argon2';
-import { ERole } from '@app/common/utils/enums/role.enum';
+import { hash, verify } from 'argon2';
 import { Logger } from 'nestjs-pino';
+import { SignInInputDto } from './dtos/signin.dto';
+import { ERole } from '@app/common/utils/enums/role.enum';
+import { ResponseMessage } from '@app/common/utils/constants/response-message.constant';
 
 @Injectable()
 export class AuthService {
@@ -31,5 +37,17 @@ export class AuthService {
       );
       throw new InternalServerErrorException('Failed to signup new user');
     }
+  }
+
+  async signIn(signInInput: SignInInputDto): Promise<UserEntity> {
+    const user = await this.userRepository.findOneByOrFail({
+      email: signInInput.email,
+    });
+    const passwordMatched = await verify(user.password, signInInput.password);
+
+    if (!passwordMatched)
+      throw new UnauthorizedException(ResponseMessage.INVALID_CREDENTIAL);
+
+    return user;
   }
 }
