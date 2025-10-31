@@ -4,7 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from '@app/common/database/entities/user.entity';
 import { Repository } from 'typeorm';
 import { hash } from 'argon2';
-import { ERole } from 'utils/enums/role.enum';
+import { ERole } from '@app/common/utils/enums/role.enum';
 import { Logger } from 'nestjs-pino';
 
 @Injectable()

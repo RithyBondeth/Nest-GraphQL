@@ -9,7 +9,7 @@ import {
 import { ProfileEntity } from './profile.entity';
 import { PostEntity } from './post.entity';
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { ERole } from '../../../../../utils/enums/role.enum';
+import { ERole } from '../../utils/enums/role.enum';
 
 @ObjectType()
 @Entity({ name: 'user' })
