@@ -10,8 +10,8 @@ import {
 import { UserEntity } from '@app/common/database/entities/user.entity';
 import { UserService } from './user.service';
 import { Logger } from '@nestjs/common';
-import { CreateUserInput } from './dtos/create-user.dto';
-import { UpdateUserInput } from './dtos/update-user.dto';
+import { CreateUserInputDto } from './dtos/create-user.dto';
+import { UpdateUserInputDto } from './dtos/update-user.dto';
 
 @Resolver(() => UserEntity)
 export class UserResolver {
@@ -38,7 +38,7 @@ export class UserResolver {
 
   @Mutation(() => UserEntity)
   createUser(
-    @Args('createUserInput') createUserInput: CreateUserInput,
+    @Args('createUserInput') createUserInput: CreateUserInputDto,
   ): Promise<UserEntity> {
     return this.userService.createUser(createUserInput);
   }
@@ -47,13 +47,13 @@ export class UserResolver {
   updateUser(
     @Args('id', { type: () => Int }) id: number,
     @Args('updateUserInput')
-    updateUserInput: UpdateUserInput,
+    updateUserInput: UpdateUserInputDto,
   ): Promise<UserEntity> {
     return this.userService.updateUser(id, updateUserInput);
   }
 
   @Mutation(() => Boolean)
-  removeUser(@Args('id', { type: () => Int }) id: number) {
+  removeUser(@Args('id', { type: () => Int }) id: number): Promise<Boolean> {
     return this.userService.removeUser(id);
   }
 }

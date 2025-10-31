@@ -1,46 +1,106 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from '@app/common/database/entities/user.entity';
 import { Repository } from 'typeorm';
-import { CreateUserInput } from './dtos/create-user.dto';
-import { UpdateUserInput } from './dtos/update-user.dto';
+import { CreateUserInputDto } from './dtos/create-user.dto';
+import { UpdateUserInputDto } from './dtos/update-user.dto';
+import { Logger } from 'nestjs-pino';
+import { ResponseMessage } from '@app/common/utils/constants/response-message.constant';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
+    private readonly logger: Logger,
   ) {}
 
   async findAll(): Promise<UserEntity[]> {
-    return await this.userRepository.find({
-      relations: ['profile', 'posts'],
-    });
+    try {
+      const users = await this.userRepository.find({
+        relations: ['profile', 'posts'],
+      });
+      if (!users) throw new NotFoundException(ResponseMessage.NOT_FOUND);
+
+      return users;
+    } catch (error) {
+      this.logger.error(
+        ResponseMessage.FAILED_RETRIEVED_DATA,
+        error instanceof Error ? error.stack : String(error),
+      );
+      throw new InternalServerErrorException(
+        ResponseMessage.FAILED_RETRIEVED_DATA,
+      );
+    }
   }
 
   async findOne(id: number): Promise<UserEntity> {
-    return await this.userRepository.findOneByOrFail({ id });
+    try {
+      const user = await this.userRepository.findOneByOrFail({ id });
+      return user;
+    } catch (error) {
+      this.logger.error(
+        ResponseMessage.FAILED_RETRIEVED_DATA,
+        error instanceof Error ? error.stack : String(error),
+      );
+      throw new InternalServerErrorException(
+        ResponseMessage.FAILED_RETRIEVED_DATA,
+      );
+    }
   }
 
-  async createUser(createUserInput: CreateUserInput): Promise<UserEntity> {
-    const newUser = this.userRepository.create(createUserInput);
-    await this.userRepository.save(newUser);
+  async createUser(createUserInput: CreateUserInputDto): Promise<UserEntity> {
+    try {
+      const newUser = this.userRepository.create(createUserInput);
+      await this.userRepository.save(newUser);
 
-    return newUser;
+      return newUser
+    } catch (error) {
+      this.logger.error(
+        ResponseMessage.FAILED_CREATED_DATA,
+        error instanceof Error ? error.stack : String(error),
+      );
+      throw new InternalServerErrorException(
+        ResponseMessage.FAILED_CREATED_DATA,
+      );
+    }
   }
 
   async updateUser(
     id: number,
-    updateUserInput: UpdateUserInput,
+    updateUserInput: UpdateUserInputDto,
   ): Promise<UserEntity> {
-    const user = await this.userRepository.findOneByOrFail({ id });
-    return await this.userRepository.save(
-      new UserEntity(Object.assign(user, updateUserInput)),
-    );
+    try {
+      const user = await this.userRepository.findOneByOrFail({ id });
+      const merged = this.userRepository.merge(user, updateUserInput);
+      return await this.userRepository.save(merged);
+    } catch (error) {
+      this.logger.error(
+        ResponseMessage.FAILED_UPDATE_DATA,
+        error instanceof Error ? error.stack : String(error),
+      );
+      throw new InternalServerErrorException(
+        ResponseMessage.FAILED_UPDATE_DATA,
+      );
+    }
   }
 
-  async removeUser(id: number) {
-    const result = await this.userRepository.delete(id);
-    return result.affected === 1;
+  async removeUser(id: number): Promise<Boolean> {
+    try {
+      const result = await this.userRepository.delete(id);
+      return result.affected === 1;
+    } catch (error) {
+      this.logger.error(
+        ResponseMessage.FAILED_DELETED_DATA,
+        error instanceof Error ? error.stack : String(error),
+      );
+      throw new InternalServerErrorException(
+        ResponseMessage.FAILED_DELETED_DATA,
+      );
+    }
   }
 }
