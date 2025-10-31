@@ -7,11 +7,11 @@ import {
   ResolveField,
   Resolver,
 } from '@nestjs/graphql';
-import { UserEntity } from 'src/database/entities/user.entity';
+import { UserEntity } from '@app/common/database/entities/user.entity';
 import { UserService } from './user.service';
 import { Logger } from '@nestjs/common';
-import { CreateUserInput } from './dto/create-user.dto';
-import { UpdateUserInput } from './dto/update-user.dto';
+import { CreateUserInput } from './dtos/create-user.dto';
+import { UpdateUserInput } from './dtos/update-user.dto';
 
 @Resolver(() => UserEntity)
 export class UserResolver {
