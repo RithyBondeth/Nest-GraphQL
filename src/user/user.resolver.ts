@@ -1,5 +1,6 @@
 import {
   Args,
+  Context,
   Int,
   Mutation,
   Parent,
@@ -51,7 +52,10 @@ export class UserResolver {
     @Args('id', { type: () => Int }) id: number,
     @Args('updateUserInput')
     updateUserInput: UpdateUserInputDto,
+    @Context() context: any,
   ): Promise<UserEntity> {
+    const user = context.req.user;
+    console.log('User: ', user);
     return this.userService.updateUser(id, updateUserInput);
   }
 
