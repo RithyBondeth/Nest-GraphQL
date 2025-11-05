@@ -71,7 +71,7 @@ export class AuthService {
     const jwtUser: AuthJwtUser = {
       userId: user.id,
       role: user.role,
-      
-    }
+    };
+    return jwtUser;
   }
 }
