@@ -12,14 +12,15 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     private readonly authService: AuthService,
   ) {
     super({
-        jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-        secretOrKey: configService.getOrThrow<string>("JWT_SECRET"),
-        ignoreExpiration: false,
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      secretOrKey: configService.getOrThrow<string>('JWT_SECRET'),
+      ignoreExpiration: false,
     });
   }
   validate(payload: IAuthJwtPayload) {
     const userId = payload.sub.userId;
-    const user = this.authService.validateJwtUser(userId);
-    
+    console.log({ userId });
+    const jwtUser = this.authService.validateJwtUser(userId);
+    return jwtUser;
   }
 }

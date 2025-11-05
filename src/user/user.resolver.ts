@@ -12,7 +12,7 @@ import { UserService } from './user.service';
 import { Logger, UseGuards } from '@nestjs/common';
 import { CreateUserInputDto } from './dtos/create-user.dto';
 import { UpdateUserInputDto } from './dtos/update-user.dto';
-import { GqlJwtGuardGuard } from 'src/auth/gaurds/gql-jwt-guard/gql-jwt.guard';
+import { GqlJwtGuardGuard } from 'src/auth/guards/gql-jwt-guard/gql-jwt.guard';
 
 @Resolver(() => UserEntity)
 export class UserResolver {
