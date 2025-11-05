@@ -69,7 +69,7 @@ export class AuthService {
   async validateJwtUser(userId: number) {
     const user = await this.userRepository.findOneByOrFail({ id: userId });
     const jwtUser: AuthJwtUser = {
-      userId: user.id,
+      id: user.id,
       role: user.role,
     };
     return jwtUser;

@@ -14,7 +14,8 @@ import { Logger, UseGuards } from '@nestjs/common';
 import { CreateUserInputDto } from './dtos/create-user.dto';
 import { UpdateUserInputDto } from './dtos/update-user.dto';
 import { GqlJwtGuardGuard } from 'src/auth/guards/gql-jwt-guard/gql-jwt.guard';
-
+import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
+import { AuthJwtUser } from '@app/common/utils/interfaces/auth-jwt-user.interface';
 @Resolver(() => UserEntity)
 export class UserResolver {
   constructor(private readonly userService: UserService) {}
@@ -62,5 +63,12 @@ export class UserResolver {
   @Mutation(() => Boolean)
   removeUser(@Args('id', { type: () => Int }) id: number): Promise<Boolean> {
     return this.userService.removeUser(id);
+  }
+
+  @UseGuards(GqlJwtGuardGuard)
+  @Query(() => UserEntity)
+  async currentUser(@CurrentUser() user: AuthJwtUser): Promise<UserEntity> {
+    const currentUserId = user.id;
+    return this.userService.findOne(currentUserId);
   }
 }

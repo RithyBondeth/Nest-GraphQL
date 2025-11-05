@@ -1,6 +1,6 @@
 import { ERole } from '../enums/role.enum';
 
 export interface AuthJwtUser {
-  userId: number;
+  id: number;
   role: ERole;
 }
