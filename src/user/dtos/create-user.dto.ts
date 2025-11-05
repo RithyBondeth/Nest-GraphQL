@@ -3,7 +3,7 @@ import { IsEmail, IsEnum, IsNotEmpty, IsString } from 'class-validator';
 import { ERole } from '@app/common/utils/enums/role.enum';
 
 @InputType()
-export class CreateUserInput {
+export class CreateUserInputDto {
   @IsString()
   @IsNotEmpty()
   @Field()
