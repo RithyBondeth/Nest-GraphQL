@@ -9,9 +9,10 @@ import {
 } from '@nestjs/graphql';
 import { UserEntity } from '@app/common/database/entities/user.entity';
 import { UserService } from './user.service';
-import { Logger } from '@nestjs/common';
+import { Logger, UseGuards } from '@nestjs/common';
 import { CreateUserInputDto } from './dtos/create-user.dto';
 import { UpdateUserInputDto } from './dtos/update-user.dto';
+import { GqlJwtGuardGuard } from 'src/auth/gaurds/gql-jwt-guard/gql-jwt.guard';
 
 @Resolver(() => UserEntity)
 export class UserResolver {
@@ -36,6 +37,7 @@ export class UserResolver {
     return await user.profile;
   }
 
+  @UseGuards(GqlJwtGuardGuard)
   @Mutation(() => UserEntity)
   createUser(
     @Args('createUserInput') createUserInput: CreateUserInputDto,
@@ -43,6 +45,7 @@ export class UserResolver {
     return this.userService.createUser(createUserInput);
   }
 
+  @UseGuards(GqlJwtGuardGuard)
   @Mutation(() => UserEntity)
   updateUser(
     @Args('id', { type: () => Int }) id: number,
@@ -52,6 +55,7 @@ export class UserResolver {
     return this.userService.updateUser(id, updateUserInput);
   }
 
+  @UseGuards(GqlJwtGuardGuard)
   @Mutation(() => Boolean)
   removeUser(@Args('id', { type: () => Int }) id: number): Promise<Boolean> {
     return this.userService.removeUser(id);

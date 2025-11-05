@@ -13,7 +13,7 @@ import { SignInInputDto } from './dtos/signin.dto';
 import { ERole } from '@app/common/utils/enums/role.enum';
 import { ResponseMessage } from '@app/common/utils/constants/response-message.constant';
 import { JwtService } from '@app/common/jwt/jwt.service';
-import { ac } from '@faker-js/faker/dist/airline-DF6RqYmq';
+import { AuthJwtUser } from '@app/common/utils/interfaces/auth-jwt-user.interface';
 
 @Injectable()
 export class AuthService {
@@ -64,5 +64,14 @@ export class AuthService {
       role: user.role,
       accessToken: accessToken,
     };
+  }
+
+  async validateJwtUser(userId: number) {
+    const user = await this.userRepository.findOneByOrFail({ id: userId });
+    const jwtUser: AuthJwtUser = {
+      userId: user.id,
+      role: user.role,
+      
+    }
   }
 }
