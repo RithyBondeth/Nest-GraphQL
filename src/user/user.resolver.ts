@@ -49,14 +49,13 @@ export class UserResolver {
   @UseGuards(GqlJwtGuardGuard)
   @Mutation(() => UserEntity)
   updateUser(
-    @Args('id', { type: () => Int }) id: number,
     @Args('updateUserInput')
     updateUserInput: UpdateUserInputDto,
     @Context() context: any,
   ): Promise<UserEntity> {
     const user = context.req.user;
     console.log('User: ', user);
-    return this.userService.updateUser(id, updateUserInput);
+    return this.userService.updateUser(user.id, updateUserInput);
   }
 
   @UseGuards(GqlJwtGuardGuard)
