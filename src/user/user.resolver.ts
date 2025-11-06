@@ -13,9 +13,12 @@ import { UserService } from './user.service';
 import { Logger, UseGuards } from '@nestjs/common';
 import { CreateUserInputDto } from './dtos/create-user.dto';
 import { UpdateUserInputDto } from './dtos/update-user.dto';
-import { GqlJwtGuardGuard } from 'src/auth/guards/gql-jwt-guard/gql-jwt.guard';
+import { GqlJwtGuard } from 'src/auth/guards/gql-jwt-guard/gql-jwt.guard';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { AuthJwtUser } from '@app/common/utils/interfaces/auth-jwt-user.interface';
+import { Roles } from 'src/auth/decorators/roles.decorator';
+import { ERole } from '@app/common/utils/enums/role.enum';
+import { RolesGuard } from 'src/auth/guards/roles/roles.guard';
 @Resolver(() => UserEntity)
 export class UserResolver {
   constructor(private readonly userService: UserService) {}
@@ -39,7 +42,7 @@ export class UserResolver {
     return await user.profile;
   }
 
-  @UseGuards(GqlJwtGuardGuard)
+  @UseGuards(GqlJwtGuard)
   @Mutation(() => UserEntity)
   createUser(
     @Args('createUserInput') createUserInput: CreateUserInputDto,
@@ -47,7 +50,7 @@ export class UserResolver {
     return this.userService.createUser(createUserInput);
   }
 
-  @UseGuards(GqlJwtGuardGuard)
+  @UseGuards(GqlJwtGuard)
   @Mutation(() => UserEntity)
   updateUser(
     @Args('updateUserInput')
@@ -59,13 +62,15 @@ export class UserResolver {
     return this.userService.updateUser(user.id, updateUserInput);
   }
 
-  @UseGuards(GqlJwtGuardGuard)
+  @Roles(ERole.ADMIN)
+  @UseGuards(RolesGuard)
+  @UseGuards(GqlJwtGuard)
   @Mutation(() => Boolean)
   removeUser(@Args('id', { type: () => Int }) id: number): Promise<Boolean> {
     return this.userService.removeUser(id);
   }
 
-  @UseGuards(GqlJwtGuardGuard)
+  @UseGuards(GqlJwtGuard)
   @Query(() => UserEntity)
   async currentUser(@CurrentUser() user: AuthJwtUser): Promise<UserEntity> {
     const currentUserId = user.id;
